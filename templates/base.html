@@ -18,7 +18,14 @@
         <a href="{% url 'index' %}"> <img src="{% static 'logo.svg' %}"> </a>
         <nav id="navegacao-principal">
             <ul>
+                {% if user.is_authenticated %}
+                    <li> Logado com {{ user.username }} </li>
+                    <li><a href="{% url 'logout' %}">Log out</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Log in</a></li>
+                {% endif %}
                 <li><a href="{% url 'destinos:index' %}">Destinos</a></li>
+                <li><a href="{% url 'destinos:lists' %}">Roteiros</a></li>
                 <li><a href="{% url 'about' %}">Sobre</a></li>
             </ul>
         </nav>

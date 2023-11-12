@@ -3,7 +3,8 @@ from django.shortcuts import render,get_object_or_404
 from django.urls import reverse, reverse_lazy
 from .models import Destino, Roteiro
 from django.views import generic
-from .forms import DestinoForm
+from .forms import DestinoForm, ReviewRoteiroForm
+from django.contrib.auth.decorators import login_required
 
 
 class DestinoDetailView(generic.DetailView):
@@ -54,3 +55,11 @@ class ListCreateView(generic.CreateView):
     template_name = 'destinos/create_roteiro.html'
     fields = ['name', 'author', 'destinos']
     success_url = reverse_lazy('destinos:lists')
+
+@login_required
+def create_review(request, destino_id):
+    destino = get_object_or_404(Destino, pk=destino_id)
+    if request.method == 'POST':
+        form = ReviewRoteiroForm(request.POST)
+        if form.is_valid():
+            review_author = request.user 
