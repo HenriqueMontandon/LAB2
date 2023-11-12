@@ -1,15 +1,18 @@
 from django.http import HttpResponse,HttpResponseRedirect
 from .temp_data import destino_data
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.urls import reverse
+from .models import Destino
+from django.views import generic
 
-def detail_destino(request, destino_id):
-    context = {'destino': destino_data[destino_id - 1]}
-    return render(request, 'destinos/detail.html', context)
 
-def list_destinos(request):
-    context = {"destino_list": destino_data}
-    return render(request, 'destinos/index.html', context)
+class DestinoDetailView(generic.DetailView):
+    model = Destino
+    template_name = 'destinos/detail.html'
+
+class DestinoListView(generic.ListView):
+    model = Destino
+    template_name = 'destinos/index.html'
 
 def search_destinos(request):
     context = {}
@@ -32,5 +35,21 @@ def create_destino(request):
         })
         return HttpResponseRedirect(
             reverse('destinos:detail', args=(len(destino_data), )))
+    else:
+        return render(request, 'destinos/create.html', {})
+
+def create_destino(request):
+    if request.method == 'POST':
+        destino_name = request.POST['name']
+        destino_categoria = request.POST['categoria']
+        destino_url = request.POST['destino_url']
+        destino_descricao = request.POST['descricao']
+        destino = Destino(name=destino_name,
+                      categoria=destino_categoria,
+                      destino_url=destino_url,
+                      descricao=destino_descricao)
+        destino.save()
+        return HttpResponseRedirect(reverse('destinos:detail',
+                                            args=(destino.id, )))
     else:
         return render(request, 'destinos/create.html', {})
