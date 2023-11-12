@@ -1,24 +1,11 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'base.html' %}
+
+{% block content %}
 <h2>Inserir Novo Destino</h2>
-<form method="POST" action="{% url 'destinos:create' %}">
-  {% csrf_token %}
-  <p>
-    <label for="id_name">Nome:</label>
-    <input type="text" name="name" id="id_name" />
-  </p>
-  <p>
-    <label for="id_categoria">Categoria</label>
-    <input type="text" name="categoria" id="id_categoria" />
-  </p>
-  <p>
-    <label for="id_descricao">Descricao:</label>
-    <input type="text" name="descricao" id="id_descricao" />
-  </p>
-  <p>
-    <label for="id_destino_url">URL da Paisagem:</label>
-    <input type="url" name="destino_url" id="id_destino_url" />
-  </p>
-  <button type="submit">Criar</button>
+<form method="post" action="{% url 'destinos:create' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Criar</button>
 </form>
 
 {% endblock content %}
