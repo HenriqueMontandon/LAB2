@@ -18,3 +18,12 @@ class Destino(models.Model):
 
     def __str__(self):
         return f'{self.name} - {self.likes}'
+    
+
+class Roteiro(models.Model):
+    author = models.CharField(max_length=255)
+    name = models.CharField(max_length=255)
+    destinos = models.ManyToManyField(Destino)
+
+    def __str__(self):
+        return f'{self.name} by {self.author}'

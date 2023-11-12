@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}
+    Roteiros
+{% endblock title %}
+{% block content %}
+    <h2>Lista de roteiros</h2>
+    <section>
+        {% for list in list_list %}
+            <hr>
+            <article>
+                <header>
+                    <h3>{{ roteiro.name }} (de {{ roteiro.author }})</h3>
+                </header>
+                <div class="lista-de-cards">
+                    {% for destino in roteiro.destinos.all %}
+                        <div class="card">
+                            <a href="{% url 'destinos:detail' destino.id %}">
+                                <img src="{{ destino.destino_url }}" alt="Foto de{{ destino.name }}">
+                            </a>
+                            <p>{{ destino.name }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </article>
+        {% endfor %}
+    </section>
+{% endblock content %}

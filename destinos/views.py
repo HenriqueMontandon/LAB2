@@ -1,8 +1,7 @@
 from django.http import HttpResponse,HttpResponseRedirect
-from .temp_data import destino_data
 from django.shortcuts import render,get_object_or_404
-from django.urls import reverse
-from .models import Destino
+from django.urls import reverse, reverse_lazy
+from .models import Destino, Roteiro
 from django.views import generic
 from .forms import DestinoForm
 
@@ -45,3 +44,13 @@ def create_destino(request):
         form = DestinoForm()
     context = {'form': form}
     return render(request, 'destinos/create.html', context)
+
+class RoteiroListView(generic.ListView):
+    model = Roteiro
+    template_name = 'destinos/roteiros.html'
+
+class ListCreateView(generic.CreateView):
+    model = Roteiro
+    template_name = 'destinos/create_roteiro.html'
+    fields = ['name', 'author', 'destinos']
+    success_url = reverse_lazy('destinos:lists')
