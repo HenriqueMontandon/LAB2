@@ -1,0 +1,14 @@
+{% extends 'base.html' %} {% block title %} {{ destino.name }} ({{
+    destino.categoria }} {% endblock title %} {% block content %}
+    <h2>{{ destino.name }}</h2>
+    
+    <section class="descricao-do-destino">
+      <img src="{{ destino.destino_url }}" alt="Paisagem de {{ destino.name}}" />
+      <ul>
+        <li>Nome: {{ destino.name}}
+        <li>Categoria: {{ destino.categoria}}</li>
+        <li>Descrição: {{destino.descricao}}
+      </ul>
+    </section>
+    
+    {% endblock content %}

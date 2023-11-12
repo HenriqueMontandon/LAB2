@@ -1,0 +1,25 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Todos os Filmes</h2>
+<section>
+  <p>
+    Muitos resultados? <a href="{% url 'destinos:search' %}">Buscar Destinos</a>
+  </p>
+  <p>
+    Não encontrou o destino?
+    <a href="{% url 'destinos:create' %}">Adicionar Novo Destino</a>
+  </p>
+</section>
+{% if destino_list %}
+<section class="lista-de-cards">
+  {% for destino in destino_list %}
+  <article class="card">
+    <a href="{% url 'destinos:detail' forloop.counter %}"
+      ><img src="{{ destino.destino_url}}" alt="Paisagem de{{destino.name}}"
+    /></a>
+    <p>{{ destino.name }} ({{ destino.categoria }})</p>
+  </article>
+  {% endfor %}
+</section>
+{% else %}
+<p>Não foi encontrado nenhum destino.</p>
+{% endif %} {% endblock content %}
