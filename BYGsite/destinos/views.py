@@ -4,6 +4,7 @@ from django.shortcuts import render,get_object_or_404
 from django.urls import reverse
 from .models import Destino
 from django.views import generic
+from .forms import DestinoForm
 
 
 class DestinoDetailView(generic.DetailView):
@@ -27,29 +28,20 @@ def search_destinos(request):
 
 def create_destino(request):
     if request.method == 'POST':
-        destino_data.append({
-            'name': request.POST['name'],
-            'categoria': request.POST['categoria'],
-            'descricao': request.POST['descricao'],
-            'destino_url': request.POST['destino_url']
-        })
-        return HttpResponseRedirect(
-            reverse('destinos:detail', args=(len(destino_data), )))
+        form = DestinoForm(request.POST)
+        if form.is_valid():
+            destino_name = form.cleaned_data['name']
+            destino_categoria = form.cleaned_data['categoria']
+            destino_descricao = form.cleaned_data['descricao']
+            destino_url = form.cleaned_data['destino_url']
+            destino = Destino(name=destino_name,
+                          categoria=destino_categoria,
+                          descricao=destino_descricao,
+                          destino_url=destino_url)
+            destino.save()
+            return HttpResponseRedirect(
+                reverse('destinos:detail', args=(destino.id, )))
     else:
-        return render(request, 'destinos/create.html', {})
-
-def create_destino(request):
-    if request.method == 'POST':
-        destino_name = request.POST['name']
-        destino_categoria = request.POST['categoria']
-        destino_url = request.POST['destino_url']
-        destino_descricao = request.POST['descricao']
-        destino = Destino(name=destino_name,
-                      categoria=destino_categoria,
-                      destino_url=destino_url,
-                      descricao=destino_descricao)
-        destino.save()
-        return HttpResponseRedirect(reverse('destinos:detail',
-                                            args=(destino.id, )))
-    else:
-        return render(request, 'destinos/create.html', {})
+        form = DestinoForm()
+    context = {'form': form}
+    return render(request, 'destinos/create.html', context)
