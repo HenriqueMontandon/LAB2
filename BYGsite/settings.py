@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'staticpages.apps.StaticpagesConfig', 
-    'destinos.apps.DestinosConfig'
+    'destinos.apps.DestinosConfig',
+    'accounts.apps.AccountsConfig'
 ]
 
 MIDDLEWARE = [
