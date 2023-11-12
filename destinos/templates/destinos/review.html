@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Review do roteiro de {{ roteiro.author}}</h2>
+
+<form action="{% url 'destinos:review' roteiro.id %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Postar</button>
+</form>
+
+<p><a href="{% url 'destino:lists' book.id %}">Voltar para o roteiro</a></p>
+{% endblock content %}

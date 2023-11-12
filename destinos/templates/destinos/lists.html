@@ -1,0 +1,25 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Todos os Roteiros</h2>
+<section>
+  <p>
+    Muitos resultados? <a href="{% url 'destinos:search' %}">Buscar Roteiros</a>
+  </p>
+  <p>
+    Não encontrou o roteiro?
+    <a href="{% url 'destinos:create-list' %}">Faca seu roteiro</a>
+  </p>
+</section>
+{% if list_list %}
+<section class="lista-de-cards">
+  {% for list in list_list %}
+  <article class="card">
+    <a href="{% url 'destinos:roteiro' list.id %}"
+      ><img src="{{ list.Capa}}" alt="Roteiro de {{list.autor}}"
+    /></a>
+    <p>{{ list.Nome }}</p>
+  </article>
+  {% endfor %}
+</section>
+{% else %}
+<p>Não foi encontrado nenhum Roteiro.</p>
+{% endif %} {% endblock content %}

@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import Destino, Review
+from .models import Destino, Review, List
 
 class DestinoForm(ModelForm):
     class Meta:
@@ -10,6 +10,16 @@ class DestinoForm(ModelForm):
             'descricao',
             'destino_url',
         ]
+class RoteiroForm(ModelForm):
+    class Meta:
+        model = List
+        fields = [
+            'Nome',
+            'Capa',
+            'autor',
+            'Destinos'
+        ]
+    
 class ReviewRoteiroForm(ModelForm):
     class Meta:
         model = Review

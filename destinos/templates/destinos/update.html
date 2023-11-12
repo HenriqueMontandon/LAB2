@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h2>Atualizar Dados do roteiro {{ list.autor.username }}</h2>
+    <form method="POST" action="{% url 'destinos:update' list.id%}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Atualizar</button>
+    </form>
+{% endblock content %}

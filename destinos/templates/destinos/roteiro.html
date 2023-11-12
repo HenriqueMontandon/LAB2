@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Todos os Destinos</h2>
+</section>
+{% if destino_list %}
+<section class="lista-de-cards">
+  {% for destino in destino_list %}
+  <article class="card">
+    <a href="{% url 'destinos:detail' destino.id %}">
+      <img src="{{ destino.destino_url }}" alt="Paisagem de {{ destino.name }}" />
+    </a>
+    <p>{{ destino.name }}</p>
+  </article>
+  {% endfor %}
+</section>
+{%else%}
+<p>Não foi encontrado nenhum destino.</p>
+{% endif %} {% endblock content %}

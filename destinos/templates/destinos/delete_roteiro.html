@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+    <form action="{% url 'destinos:delete' list.id %}" method="post">
+        {% csrf_token %}
+        <p>Você tem certeza que deseja apagar o Roteiro?</p>
+        <button type="submit">Apagar</button>
+    </form>
+{% endblock content %}
+

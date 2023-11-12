@@ -4,7 +4,7 @@
 {% endblock title %}
 {% block content %}
     <h2>Criar Roteiro</h2>
-    <form action="{% url 'destino:create-list' %}" method="post">
+    <form action="{% url 'destinos:create-list' %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Criar</button>
