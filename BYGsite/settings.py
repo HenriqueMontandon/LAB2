@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'staticpages.apps.StaticpagesConfig', 
     'destinos.apps.DestinosConfig',
     'accounts.apps.AccountsConfig'
+    'posts.apps.PostsConfig',
 ]
 
 MIDDLEWARE = [

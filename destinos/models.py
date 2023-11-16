@@ -26,7 +26,7 @@ class List(models.Model):
     Destinos = models.ManyToManyField(Destino)
 
     def __str__(self):
-        return f'{self.name} by {self.author.username}'
+        return f'{self.Nome} by {self.autor.username}'
     
 class Review(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
