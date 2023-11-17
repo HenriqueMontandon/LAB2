@@ -6,9 +6,10 @@ class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=1000)
     criacaodata = models.DateTimeField(auto_now_add=True)
-    ateracaodata = models.DateTimeField(auto_now= True)
+    alteracaodata = models.DateTimeField(auto_now= True)
     likes = models.IntegerField(default=0)
     categoria = models.ForeignKey(Categorie, on_delete=models.CASCADE)
+    content = models.TextField()
 
     def __str__(self):
         return f'{self.titulo} - {self.likes}'

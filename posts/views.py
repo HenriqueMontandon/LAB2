@@ -1,9 +1,60 @@
 from django.http import HttpResponse,HttpResponseRedirect
-from django.shortcuts import render,get_object_or_404, get_list_or_404
+from django.shortcuts import render,get_object_or_404, get_list_or_404,redirect
 from django.urls import reverse, reverse_lazy
 from .models import Post, Categorie, Comment
-from django.views import generic
+from django.views import generic, View
+from django.views.generic import UpdateView
 from .forms import PostForm, CategorieForm, CommentForm
 from django.contrib.auth.decorators import login_required,permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+
+class DetailPost(generic.DetailView):
+    model  = Post
+    template_name = 'posts/detail.html'
+
+
+class DeletePost(View):
+    @login_required
+    def get(self, request, post_id):
+        post = get_object_or_404(Post, pk=post_id)
+
+        # Check if the user is the author or an admin
+        if request.user == post.author or request.user.is_staff:
+            # User is authorized to delete the post
+            post.delete()
+            messages.success(request, 'Post deleted successfully.')
+            return redirect('posts:index')  # Redirect to the post list or any other desired URL
+        else:
+            # User is not authorized, show an error message or redirect as needed
+            messages.error(request, 'You are not authorized to delete this post.')
+            return redirect('posts:detail', post_id=post.id)
+        
+
+
+class EditPost(UpdateView):
+    model = Post
+    fields = ['titulo', 'content']
+    template_name = 'posts/update.html'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+
+        # Check if the user is the author or an admin
+        if self.request.user == post.author or self.request.user.is_staff:
+            # User is authorized to edit the post
+            messages.success(self.request, 'Post edited successfully.')
+            return super().form_valid(form)
+        else:
+            # User is not authorized, show an error message or redirect as needed
+            messages.error(self.request, 'You are not authorized to edit this post.')
+            return redirect('posts:detail', post_id=post.id)  # Redirect to post detail or any other desired URL
+
+    def get_success_url(self):
+        return reverse_lazy('posts:index')
+    
+    
+class listPosts(generic.ListView):
+    model = Post
+    template_name = 'posts/index.html'
 
