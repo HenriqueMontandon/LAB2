@@ -1,0 +1,11 @@
+{% extends 'base.html' %} 
+{% block title %}{{ post.titulo }}{% endblock title %} 
+{% block content %}
+    <h2>{{ post.titulo}}</h2>
+    
+    <section class="post">
+      <img src="{{ post.imagemCapa.url }}" alt="by {{ post.author.username }}" />
+      <p>{{ post.content }}</p>
+    </section>
+    
+{% endblock content %}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Todos os Posts</h2>
+<section>
+  <p>
+    Compartilhe você também sua experiência!
+    <a href="{% url 'posts:create' %}">Fazer postagem</a>
+  </p>
+</section>
+{% if post_list %}
+<section class="lista-de-cards">
+  {% for post in post_list %}
+  <article class="card">
+    <a href="{% url 'posts:detail' post.id %}"
+      ><img src="{{ post.imagemCapa}}" alt="{{post.titulo}}"
+    /></a>
+    <p>by {{ post.author.usernamer }}</p>
+  </article>
+  {% endfor %}
+</section>
+{% else %}
+<p>Não foi encontrado nenhum post.</p>
+{% endif %} {% endblock content %}

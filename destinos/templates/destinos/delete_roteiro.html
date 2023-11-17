@@ -5,5 +5,7 @@
         <p>Você tem certeza que deseja apagar o Roteiro?</p>
         <button type="submit">Apagar</button>
     </form>
+
+    <a href="{% url 'destinos:roteiro' list.id %}">Cancelar</a>
 {% endblock content %}
 

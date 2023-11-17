@@ -1,0 +1,16 @@
+html
+Copy code
+{% extends 'base.html' %}
+{% block title %}Update Post{% endblock title %}
+{% block content %}
+  <h2>Editar o Post</h2>
+
+  <form method="post" action="{% url 'posts:edit' post.id %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">Atualizar</button>
+  </form>
+
+  <a href="{% url 'posts:detail' post.id %}">Cancelar</a>
+{% endblock content %}

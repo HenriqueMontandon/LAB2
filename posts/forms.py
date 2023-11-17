@@ -6,6 +6,7 @@ class PostForm(ModelForm):
         model = Post
         fields = [
             'titulo',
-            'content'
+            'content',
+            'imagemCapa',
+            'categoria'
         ]
-        
