@@ -13,7 +13,7 @@ urlpatterns = [
     path('createCategory/', views.CreateCategorieView.as_view(), name='createCategorie'),
     path('category/<int:pk>/delete', views.deleteCategorieView.as_view(), name='deleteCategory'),
     path('listCategories/', views.listCategories.as_view(), name='listCategories'),
-    path('<int:pk>/deleteComment/<int:comment_id>', views.DeleteCommentView.as_view(), name='deleteComment')
+    path('deleteComment/<int:pk>', views.DeleteCommentView.as_view(), name='deleteComment')
 ]
 
 if settings.DEBUG:

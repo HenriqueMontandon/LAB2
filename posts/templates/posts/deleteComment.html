@@ -4,10 +4,12 @@
   <h2>Delete o Comentário</h2>
   <p>Tem certeza que quer deletar o comentário "{{comment.comment}}"?</p>
 
-  <form method="post" action="{% url 'posts:deleteComment' pk=post.id comment_id=comment.id %}">
-    {% csrf_token %}
-    <button type="submit">Deletar</button>
-  </form>
+  {% if user.is_authenticated and user == comment.author or user.is_staff %}
+    <form method="post" action="{% url 'posts:deleteComment' pk=comment.id %}">
+      {% csrf_token %}
+      <button type="submit">Deletar</button>
+    </form>
+  {% endif %}
 
-  <a href="{% url 'posts:detail' post.id %}">Cancelar</a>
+  <a href="{% url 'posts:detail' comment.post.id %}">Cancelar</a>
 {% endblock content %}

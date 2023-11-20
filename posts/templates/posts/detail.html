@@ -5,7 +5,7 @@
 {% endblock title %}
 
 {% block content %}
-    <h2>{{ post.titulo }}</h2>
+    <h2>{{ post.titulo }}{{post.id}}</h2>
     
     <section class="post">
         <img src="{{ post.imagemCapa.url }}" alt="by {{ post.author.username }}" />
@@ -34,7 +34,7 @@
                     </div>
                     <p class="mt-2">{{ comment.comment|linebreaks }}</p>
                     {% if user.is_authenticated and user == comment.author or user.is_staff %}
-                        <a href="{% url 'posts:deleteComment' pk=post.id comment_id=comment.id %}" class="btn btn-link btn-sm text-danger p-0">Deletar</a>
+                    <a href="{% url 'posts:deleteComment' pk=comment.id %}" class="btn btn-link btn-sm text-danger p-0">Deletar</a>
                     {% endif %}
                 </div>
             </div>

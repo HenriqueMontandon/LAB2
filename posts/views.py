@@ -1,11 +1,10 @@
 from django.http import HttpResponse,HttpResponseRedirect
-from django.shortcuts import render,get_object_or_404, get_list_or_404,redirect
+from django.shortcuts import render,get_object_or_404,redirect
 from django.urls import reverse, reverse_lazy
 from .models import Post, Categorie, Comment
 from django.views import generic, View
 from django.views.generic import UpdateView, CreateView, DeleteView
 from .forms import PostForm, CategorieForm, CommentForm
-from django.contrib.auth.decorators import login_required,permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 
@@ -121,15 +120,19 @@ class deleteCategorieView(LoginRequiredMixin, generic.DeleteView):
 class listCategories(generic.ListView):
     model = Categorie
     template_name = 'posts/listCategories.html'
+     
 
 class DeleteCommentView(LoginRequiredMixin, DeleteView):
     model = Comment
     template_name = 'posts/deleteComment.html'
-    success_url = reverse_lazy('posts:index')
 
     def test_func(self):
-        return self.request.user.is_staff or self.get_object().author == self.request.user
+        comment = self.get_object()
+        return self.request.user.is_staff or comment.author == self.request.user
 
     def handle_no_permission(self):
-        messages.error(self.request, 'You are not authorized to delete this post.')
-        return redirect('posts:index')
+        messages.error(self.request, 'You are not authorized to delete this comment.')
+        return redirect('posts:index')  # Use reverse to get the URL by name
+
+    def get_success_url(self):
+        return reverse('posts:index')
