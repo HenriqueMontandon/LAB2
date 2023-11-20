@@ -39,7 +39,7 @@ matplotlib-inline==0.1.6
 multitasking==0.0.11
 nest-asyncio==1.5.5
 networkx==2.6.3
-numpy==1.23.3
+numpy==1.21.6
 opencv-python==4.8.0.74
 openpyxl==3.1.2
 packaging==21.3
