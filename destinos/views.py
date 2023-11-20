@@ -58,7 +58,7 @@ class ListListView(generic.ListView):
 class ListCreateView(LoginRequiredMixin, generic.CreateView):
     model = List
     template_name = 'destinos/create_roteiro.html'
-    fields = ['Nome', 'Destinos', 'Capa']
+    fields = ['Nome', 'atracoes', 'Capa']
 
     def form_valid(self, form):
         form.instance.autor = self.request.user
@@ -76,7 +76,7 @@ def create_review(request, roteiro_id):
             review_text = form.cleaned_data['text']
             roteiro.review_set.create(author=review_author, text=review_text)
             return HttpResponseRedirect(
-                reverse('books:detail',args=(roteiro_id,)))
+                reverse('destinos:roteiro',args=(roteiro_id,)))
     else:
         form = ReviewRoteiroForm()
         context = {'form': form, 'roteiro': roteiro}
@@ -87,7 +87,7 @@ def RoteiroDetailView(request, pk):
     lista = List.objects.get(pk=pk)
 
     # Obtém os destino_id associados a essa lista
-    destino_ids = List.objects.filter(pk=pk).values_list('Destinos', flat=True)
+    destino_ids = List.objects.filter(pk=pk).values_list('atracoes', flat=True)
 
     # Obtém os destinos associados a esses destino_ids
     destinos = Destino.objects.filter(pk__in=destino_ids)

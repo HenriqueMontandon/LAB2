@@ -26,7 +26,11 @@
                 {% endif %}
                 <li><a href="{% url 'destinos:index' %}">Destinos</a></li>
                 <li><a href="{% url 'destinos:lists' %}">Roteiros</a></li>
+                <li><a href="{% url 'posts:index' %}">Blog da Comunidade</a></li>
                 <li><a href="{% url 'about' %}">Sobre</a></li>
+                {% if user.is_authenticated and user.is_staff %}
+                <li><a href="{% url 'posts:listCategories' %}">Categorias</a></li>
+                {% endif %}
             </ul>
         </nav>
 

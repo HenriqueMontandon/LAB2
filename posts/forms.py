@@ -10,3 +10,10 @@ class PostForm(ModelForm):
             'imagemCapa',
             'categoria'
         ]
+
+class CategorieForm(ModelForm):
+    class Meta:
+        model = Categorie
+        fields = [
+            'name'
+        ]

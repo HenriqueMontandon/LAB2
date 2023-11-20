@@ -1,0 +1,17 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Create Category{% endblock title %}
+
+{% block content %}
+  <h2>Criar Categoria de Post</h2>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">Criar</button>
+  </form>
+
+  <a href="{% url 'posts:index' %}">Cancelar</a>
+{% endblock content %}

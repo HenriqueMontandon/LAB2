@@ -17,7 +17,7 @@ class RoteiroForm(ModelForm):
             'Nome',
             'Capa',
             'autor',
-            'Destinos'
+            'atracoes'
         ]
     
 class ReviewRoteiroForm(ModelForm):

@@ -10,10 +10,9 @@
 <section class="lista-de-cards">
   {% for post in post_list %}
   <article class="card">
-    <a href="{% url 'posts:detail' post.id %}"
-      ><img src="{{ post.imagemCapa}}" alt="{{post.titulo}}"
-    /></a>
-    <p>by {{ post.author.usernamer }}</p>
+    <a href="{% url 'posts:detail' post.id %}"><img src= '{{post.imagemCapa.url}}'
+      alt="{{post.titulo}}"></a>
+    <p>{{post.titulo}} by {{ post.author}}</p>
   </article>
   {% endfor %}
 </section>

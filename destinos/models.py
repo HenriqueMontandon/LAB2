@@ -23,7 +23,7 @@ class List(models.Model):
     autor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     Nome = models.CharField(max_length=255)
     Capa = models.URLField(max_length=5000, null=True)
-    Destinos = models.ManyToManyField(Destino)
+    atracoes = models.ManyToManyField(Destino)
 
     def __str__(self):
         return f'{self.Nome} by {self.autor.username}'

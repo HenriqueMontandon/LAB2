@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Todos as Categorias</h2>
+
+  <section>
+    {% if user.is_authenticated and user.is_staff %}
+      <div>
+        <a href="{% url 'posts:createCategorie' %}">Criar Categoria</a>
+      </div>
+    {% endif %}
+  </section>
+
+  {% if categorie_list %}
+    <section class="lista-de-cards">
+      {% for categorie in categorie_list %}
+        <article class="card">
+          <p>{{ categorie.name }}</p>
+          {% if user.is_authenticated and user.is_staff %}
+            <form method="post" action="{% url 'posts:deleteCategory' categorie.id %}">
+              {% csrf_token %}
+              <button type="submit">Deletar Categoria</button>
+            </form>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </section>
+  {% else %}
+    <p>Não foi encontrado nenhuma Categoria.</p>
+  {% endif %}
+{% endblock content %}

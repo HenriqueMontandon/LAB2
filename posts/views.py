@@ -3,32 +3,27 @@ from django.shortcuts import render,get_object_or_404, get_list_or_404,redirect
 from django.urls import reverse, reverse_lazy
 from .models import Post, Categorie, Comment
 from django.views import generic, View
-from django.views.generic import UpdateView, CreateView 
-from .forms import PostForm
+from django.views.generic import UpdateView, CreateView, DeleteView
+from .forms import PostForm, CategorieForm
 from django.contrib.auth.decorators import login_required,permission_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 
 class DetailPost(generic.DetailView):
     model  = Post
     template_name = 'posts/detail.html'
 
+class DeletePost(DeleteView):
+    def get(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
 
-class DeletePost(View):
-    @login_required
-    def get(self, request, post_id):
-        post = get_object_or_404(Post, pk=post_id)
-
-        # Check if the user is the author or an admin
-        if request.user == post.author or request.user.is_staff:
-            # User is authorized to delete the post
+        if self.request.user == post.author or request.user.is_staff:
             post.delete()
             messages.success(request, 'Post deleted successfully.')
-            return redirect('posts:index')  # Redirect to the post list or any other desired URL
+            return redirect('posts:index')  
         else:
-            # User is not authorized, show an error message or redirect as needed
             messages.error(request, 'You are not authorized to delete this post.')
-            return redirect('posts:detail', post_id=post.id)
+            return redirect('posts:detail', pk=post.id)
         
 
 
@@ -48,7 +43,7 @@ class EditPost(UpdateView):
         else:
             # User is not authorized, show an error message or redirect as needed
             messages.error(self.request, 'You are not authorized to edit this post.')
-            return redirect('posts:detail', post_id=post.id)  # Redirect to post detail or any other desired URL
+            return redirect('posts:detail', pk=post.id)  # Redirect to post detail or any other desired URL
 
     def get_success_url(self):
         return reverse_lazy('posts:index')
@@ -68,4 +63,47 @@ class CreatePost(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('posts:detail', kwargs={'post_id': self.object.id})
+        return reverse_lazy('posts:detail', kwargs={'pk': self.object.id})
+    
+
+
+class CreateCategorieView(UserPassesTestMixin, View):
+    template_name = 'posts/createCategorie.html'  
+    form_class = CategorieForm  
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def handle_no_permission(self):
+        messages.error(self.request, 'You are not authorized to create a category.')
+        return redirect('posts:index')  
+
+    def get(self, request):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('posts:listCategories')  
+
+        return render(request, self.template_name, {'form': form})
+    
+
+class deleteCategorieView(LoginRequiredMixin, generic.DeleteView):
+    def test_func(self):
+        return self.request.user.is_staff
+    
+    def handle_no_permission(self):
+        messages.error(self.request, 'You are not authorized to create a category.')
+        return redirect('posts:index')
+    
+    model = Categorie
+    template_name = 'posts/deleteCategorie.html'
+    success_url = '/'
+
+class listCategories(generic.ListView):
+    model = Categorie
+    template_name = 'posts/listCategories.html'
+

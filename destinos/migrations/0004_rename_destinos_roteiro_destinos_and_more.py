@@ -15,11 +15,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RenameField(
             model_name='roteiro',
-            old_name='destinos',
-            new_name='Destinos',
-        ),
-        migrations.RenameField(
-            model_name='roteiro',
             old_name='name',
             new_name='Nome',
         ),
