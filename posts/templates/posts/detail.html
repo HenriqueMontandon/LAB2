@@ -1,18 +1,53 @@
-{% extends 'base.html' %} 
-{% block title %}{{ post.titulo }}{% endblock title %} 
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ post.titulo }}
+{% endblock title %}
+
 {% block content %}
     <h2>{{ post.titulo }}</h2>
     
     <section class="post">
-      <img src="{{ post.imagemCapa.url }}" alt="by {{ post.author.username }}" />
-      <p>{{ post.content }}</p>
+        <img src="{{ post.imagemCapa.url }}" alt="by {{ post.author.username }}" />
+        <p>{{ post.content|safe }}</p>
     </section>
 
     {% if user.is_authenticated and user == post.author or user.is_staff %}
-      <div>
-        <a href="{% url 'posts:edit' pk=post.id %}">Edit</a> |
-        <a href="{% url 'posts:delete' pk=post.id %}">Delete</a>
-      </div>
+        <div>
+            <a href="{% url 'posts:edit' pk=post.id %}">Editar</a> |
+            <a href="{% url 'posts:delete' pk=post.id %}">Deletar</a>
+        </div>
     {% endif %}
-    
+
+    {% if comment_list %}
+    <section class="card-body">
+        {% for comment in comment_list %}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div class="font-weight-bold"> 
+                            {{ comment.author }}
+                        </div>
+                        <div class="text-muted font-weight-normal">
+                          <small>{{ comment.criacaodata }}</small>
+                        </div>
+                    </div>
+                    <p class="mt-2">{{ comment.comment|linebreaks }}</p>
+                    {% if user.is_authenticated and user == comment.author or user.is_staff %}
+                        <a href="{% url 'posts:deleteComment' pk=post.id comment_id=comment.id %}" class="btn btn-link btn-sm text-danger p-0">Deletar</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </section>
+    {% else %}
+        <p>Sem Comentários.</p>
+    {% endif %}
+
+    <h3>Deixe seu Comentário</h3>
+    <form method="post" action="{% url 'posts:detail' pk=post.id %}">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit">Comentar</button>
+    </form>
 {% endblock content %}

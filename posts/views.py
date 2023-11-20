@@ -4,28 +4,42 @@ from django.urls import reverse, reverse_lazy
 from .models import Post, Categorie, Comment
 from django.views import generic, View
 from django.views.generic import UpdateView, CreateView, DeleteView
-from .forms import PostForm, CategorieForm
+from .forms import PostForm, CategorieForm, CommentForm
 from django.contrib.auth.decorators import login_required,permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 
-class DetailPost(generic.DetailView):
-    model  = Post
+def DetailPost(request, pk):
     template_name = 'posts/detail.html'
+    post = get_object_or_404(Post, pk=pk)
+    comment_list = post.comments.order_by("-criacaodata")
+    new_comment = None
+    if request.method == 'POST':
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.post = post
+            new_comment.author = request.user
+            new_comment.save()
+    else:
+        comment_form = CommentForm()
+    return render(request, template_name, {'post': post,
+                                           'comment_list': comment_list,
+                                           'new_comment': new_comment,
+                                           'comment_form': comment_form})
 
-class DeletePost(DeleteView):
-    def get(self, request, pk):
-        post = get_object_or_404(Post, pk=pk)
+class DeletePostView(LoginRequiredMixin, DeleteView):
+    model = Post
+    template_name = 'posts/delete.html'
+    success_url = reverse_lazy('posts:index')
 
-        if self.request.user == post.author or request.user.is_staff:
-            post.delete()
-            messages.success(request, 'Post deleted successfully.')
-            return redirect('posts:index')  
-        else:
-            messages.error(request, 'You are not authorized to delete this post.')
-            return redirect('posts:detail', pk=post.id)
-        
+    def test_func(self):
+        # Allow the author of the post or staff users to delete
+        return self.request.user.is_staff or self.get_object().author == self.request.user
 
+    def handle_no_permission(self):
+        messages.error(self.request, 'You are not authorized to delete this post.')
+        return redirect('posts:index')
 
 class EditPost(UpdateView):
     model = Post
@@ -92,18 +106,30 @@ class CreateCategorieView(UserPassesTestMixin, View):
     
 
 class deleteCategorieView(LoginRequiredMixin, generic.DeleteView):
+    model = Categorie
+    template_name = 'posts/deleteCategorie.html'
+    success_url = '/'
+
     def test_func(self):
         return self.request.user.is_staff
     
     def handle_no_permission(self):
-        messages.error(self.request, 'You are not authorized to create a category.')
+        messages.error(self.request, 'You are not authorized to delete a category.')
         return redirect('posts:index')
-    
-    model = Categorie
-    template_name = 'posts/deleteCategorie.html'
-    success_url = '/'
+
 
 class listCategories(generic.ListView):
     model = Categorie
     template_name = 'posts/listCategories.html'
 
+class DeleteCommentView(LoginRequiredMixin, DeleteView):
+    model = Comment
+    template_name = 'posts/deleteComment.html'
+    success_url = reverse_lazy('posts:index')
+
+    def test_func(self):
+        return self.request.user.is_staff or self.get_object().author == self.request.user
+
+    def handle_no_permission(self):
+        messages.error(self.request, 'You are not authorized to delete this post.')
+        return redirect('posts:index')

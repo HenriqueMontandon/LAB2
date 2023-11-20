@@ -17,3 +17,10 @@ class CategorieForm(ModelForm):
         fields = [
             'name'
         ]
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = [
+            'comment'
+        ]

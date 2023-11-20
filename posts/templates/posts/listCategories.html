@@ -17,10 +17,7 @@
         <article class="card">
           <p>{{ categorie.name }}</p>
           {% if user.is_authenticated and user.is_staff %}
-            <form method="post" action="{% url 'posts:deleteCategory' categorie.id %}">
-              {% csrf_token %}
-              <button type="submit">Deletar Categoria</button>
-            </form>
+            <a href="{% url 'posts:deleteCategory' categorie.id %}">Deletar</a>
           {% endif %}
         </article>
       {% endfor %}
