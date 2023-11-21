@@ -6,7 +6,10 @@ pip install -r requirements.txt
 
 python manage.py collectstatic --no-input
 # adicione linhas abaixo
+
 python manage.py migrate
+
+gunicorn BYGsite.wsgi:application --bind 0.0.0.0:$PORT
 
 # create superuser if missing
 cat <<EOF | python manage.py shell
